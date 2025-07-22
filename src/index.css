@@ -1,3 +1,17 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@font-face {
+  font-family: 'BEAMS';
+  src: url('./assets/Beams.ttf') format('truetype');
+}
+
+.logo-text {
+  font-family: 'BEAMS', sans-serif;
+  @apply text-[3.5rem] text-emerald-600;
+}
+
+body {
+  @apply bg-gradient-to-br from-emerald-50 via-slate-50 to-green-50;
+}
