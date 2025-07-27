@@ -161,7 +161,7 @@ const Auth = ({ setUser }) => {
                 {/* Logo and Brand Section */}
                 <div className="text-center mb-8">
                     <div className="flex items-center justify-center mb-4">
-                        <div className="logo-text">R</div>
+                        <div className="logo-text text-[3.5rem]">R</div>
                         <h1 className="text-[3.5rem] font-bold text-slate-800">elictronics</h1>
                     </div>
                     <p className="text-sm text-slate-600 font-medium">Giving Tech a Second Life</p>
