@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useCallback } from "react"
 import {
   Wrench,
   Recycle,
@@ -33,6 +33,12 @@ import {
 
 export default function Dashboard({ user, onSignOut }) {
   const [activeTab, setActiveTab] = useState("welcome")
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+
+  const handleTabChange = useCallback((tab) => {
+    setActiveTab(tab)
+    setIsMobileMenuOpen(false)
+  }, [])
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-slate-50 to-green-50">
@@ -48,10 +54,24 @@ export default function Dashboard({ user, onSignOut }) {
               <span className="text-xl font-bold text-slate-800">elictronics</span>
             </div>
 
-            {/* Navigation Links */}
+            {/* Mobile Menu Button */}
+            <div className="md:hidden">
+              <button
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                className="p-2 rounded-lg hover:bg-slate-100"
+              >
+                <div className="space-y-1.5">
+                  <div className="w-6 h-0.5 bg-slate-600"></div>
+                  <div className="w-6 h-0.5 bg-slate-600"></div>
+                  <div className="w-6 h-0.5 bg-slate-600"></div>
+                </div>
+              </button>
+            </div>
+
+            {/* Desktop Navigation Links */}
             <div className="hidden md:flex items-center space-x-8">
               <button
-                onClick={() => setActiveTab("welcome")}
+                onClick={() => handleTabChange("welcome")}
                 className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
                   activeTab === "welcome" ? "bg-emerald-100 text-emerald-700" : "text-slate-600 hover:text-emerald-600"
                 }`}
@@ -59,7 +79,7 @@ export default function Dashboard({ user, onSignOut }) {
                 Dashboard
               </button>
               <button
-                onClick={() => setActiveTab("requests")}
+                onClick={() => handleTabChange("requests")}
                 className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
                   activeTab === "requests" ? "bg-emerald-100 text-emerald-700" : "text-slate-600 hover:text-emerald-600"
                 }`}
@@ -117,6 +137,40 @@ export default function Dashboard({ user, onSignOut }) {
               </DropdownMenu>
             </div>
           </div>
+
+          {/* Mobile Navigation Menu */}
+          <div
+            className={`md:hidden ${
+              isMobileMenuOpen ? "block" : "hidden"
+            } border-t border-slate-200 py-2`}
+          >
+            <div className="flex flex-col space-y-2 px-4">
+              <button
+                onClick={() => handleTabChange("welcome")}
+                className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  activeTab === "welcome" ? "bg-emerald-100 text-emerald-700" : "text-slate-600 hover:text-emerald-600"
+                }`}
+              >
+                Dashboard
+              </button>
+              <button
+                onClick={() => handleTabChange("requests")}
+                className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  activeTab === "requests" ? "bg-emerald-100 text-emerald-700" : "text-slate-600 hover:text-emerald-600"
+                }`}
+              >
+                My Requests
+              </button>
+              <button
+                onClick={() => handleTabChange("find")}
+                className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  activeTab === "find" ? "bg-emerald-100 text-emerald-700" : "text-slate-600 hover:text-emerald-600"
+                }`}
+              >
+                Find a Hobbyist
+              </button>
+            </div>
+          </div>
         </div>
       </nav>
 
@@ -149,7 +203,7 @@ export default function Dashboard({ user, onSignOut }) {
                 </CardHeader>
                 <CardContent>
                   <Button
-                    onClick={() => setActiveTab("find")}
+                    onClick={() => handleTabChange("find")}
                     className="w-full bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 rounded-xl"
                   >
                     Start New Request
@@ -235,43 +289,55 @@ export default function Dashboard({ user, onSignOut }) {
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="flex items-center gap-4 p-4 bg-slate-50 rounded-xl">
-                  <div className="p-2 bg-blue-100 rounded-lg">
-                    <Smartphone className="h-5 w-5 text-blue-600" />
+                <div className="flex max-[420px]:flex-col gap-4 p-4 bg-slate-50 rounded-xl">
+                  <div className="flex items-center gap-4 flex-1">
+                    <div className="p-2 bg-blue-100 rounded-lg">
+                      <Smartphone className="h-5 w-5 text-blue-600" />
+                    </div>
+                    <div className="flex-1">
+                      <p className="font-medium text-slate-800 max-[520px]:text-sm">iPhone 12 Screen Repair</p>
+                      <p className="text-sm text-slate-600 max-[520px]:text-xs">Assigned to TechMaster_Pro • 2 hours ago</p>
+                    </div>
                   </div>
-                  <div className="flex-1">
-                    <p className="font-medium text-slate-800">iPhone 12 Screen Repair</p>
-                    <p className="text-sm text-slate-600">Assigned to TechMaster_Pro • 2 hours ago</p>
+                  <div className="max-[420px]:pl-12">
+                    <Badge variant="secondary" className="bg-yellow-100 text-yellow-800 max-[520px]:text-xs">
+                      In Progress
+                    </Badge>
                   </div>
-                  <Badge variant="secondary" className="bg-yellow-100 text-yellow-800">
-                    In Progress
-                  </Badge>
                 </div>
 
-                <div className="flex items-center gap-4 p-4 bg-slate-50 rounded-xl">
-                  <div className="p-2 bg-green-100 rounded-lg">
-                    <Laptop className="h-5 w-5 text-green-600" />
+                <div className="flex max-[420px]:flex-col gap-4 p-4 bg-slate-50 rounded-xl">
+                  <div className="flex items-center gap-4 flex-1">
+                    <div className="p-2 bg-green-100 rounded-lg">
+                      <Laptop className="h-5 w-5 text-green-600" />
+                    </div>
+                    <div className="flex-1">
+                      <p className="font-medium text-slate-800 max-[520px]:text-sm">MacBook Battery Replacement</p>
+                      <p className="text-sm text-slate-600 max-[520px]:text-xs">Completed by RepairGuru • 1 day ago</p>
+                    </div>
                   </div>
-                  <div className="flex-1">
-                    <p className="font-medium text-slate-800">MacBook Battery Replacement</p>
-                    <p className="text-sm text-slate-600">Completed by RepairGuru • 1 day ago</p>
+                  <div className="max-[420px]:pl-12">
+                    <Badge variant="secondary" className="bg-green-100 text-green-800 max-[520px]:text-xs">
+                      Completed
+                    </Badge>
                   </div>
-                  <Badge variant="secondary" className="bg-green-100 text-green-800">
-                    Completed
-                  </Badge>
                 </div>
 
-                <div className="flex items-center gap-4 p-4 bg-slate-50 rounded-xl">
-                  <div className="p-2 bg-purple-100 rounded-lg">
-                    <Headphones className="h-5 w-5 text-purple-600" />
+                <div className="flex max-[420px]:flex-col gap-4 p-4 bg-slate-50 rounded-xl">
+                  <div className="flex items-center gap-4 flex-1">
+                    <div className="p-2 bg-purple-100 rounded-lg">
+                      <Headphones className="h-5 w-5 text-purple-600" />
+                    </div>
+                    <div className="flex-1">
+                      <p className="font-medium text-slate-800 max-[520px]:text-sm">AirPods Pro Repair</p>
+                      <p className="text-sm text-slate-600 max-[520px]:text-xs">Quote received from AudioFix • 3 days ago</p>
+                    </div>
                   </div>
-                  <div className="flex-1">
-                    <p className="font-medium text-slate-800">AirPods Pro Repair</p>
-                    <p className="text-sm text-slate-600">Quote received from AudioFix • 3 days ago</p>
+                  <div className="max-[420px]:pl-12">
+                    <Badge variant="secondary" className="bg-blue-100 text-blue-800 max-[520px]:text-xs">
+                      Quote Ready
+                    </Badge>
                   </div>
-                  <Badge variant="secondary" className="bg-blue-100 text-blue-800">
-                    Quote Ready
-                  </Badge>
                 </div>
               </CardContent>
             </Card>
