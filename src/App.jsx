@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react'
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import './App.css'
 import Auth from './components/Auth'
 import Dashboard from './components/dashboard'
+import HobbyistProfileForm from './components/hobbyist-profile-form'
 import { auth } from './firebase'
 import { onAuthStateChanged, signOut } from 'firebase/auth'
 
@@ -35,13 +37,22 @@ function App() {
   }
 
   return (
-    <>
-      {user ? (
-        <Dashboard user={user} onSignOut={handleSignOut} />
-      ) : (
-        <Auth />
-      )}
-    </>
+    <Router>
+      <Routes>
+        {user ? (
+          <>
+            <Route path="/dashboard" element={<Dashboard user={user} onSignOut={handleSignOut} />} />
+            <Route path="/profile" element={<HobbyistProfileForm user={user} />} />
+            <Route path="/" element={<Navigate to="/dashboard" replace />} />
+          </>
+        ) : (
+          <>
+            <Route path="/auth" element={<Auth />} />
+            <Route path="*" element={<Navigate to="/auth" replace />} />
+          </>
+        )}
+      </Routes>
+    </Router>
   )
 }
 

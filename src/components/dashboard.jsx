@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useCallback } from "react"
+import { useNavigate } from "react-router-dom"
 import {
   Wrench,
   Recycle,
@@ -32,6 +33,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 
 export default function Dashboard({ user, onSignOut }) {
+  const navigate = useNavigate()
   const [activeTab, setActiveTab] = useState("welcome")
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
@@ -120,7 +122,7 @@ export default function Dashboard({ user, onSignOut }) {
                     </div>
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => navigate('/profile')}>
                     <User className="mr-2 h-4 w-4" />
                     <span>Profile</span>
                   </DropdownMenuItem>
