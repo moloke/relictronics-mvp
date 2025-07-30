@@ -205,7 +205,7 @@ export default function Dashboard({ user, onSignOut }) {
                 </CardHeader>
                 <CardContent>
                   <Button
-                    onClick={() => handleTabChange("find")}
+                    onClick={() => navigate("/repair-request")}
                     className="w-full bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 rounded-xl"
                   >
                     Start New Request

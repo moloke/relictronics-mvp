@@ -108,7 +108,7 @@ export default function HobbyistProfileForm({ user, onSignOut }) {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             {/* Logo */}
-            <div className="flex items-center">
+            <div className="flex items-center cursor-pointer" onClick={() => navigate("/dashboard")}>
               <div className="relative">
                 <div className="logo-text text-[1.8rem]">R</div>
               </div>
