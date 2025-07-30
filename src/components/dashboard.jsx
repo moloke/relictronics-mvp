@@ -1,7 +1,8 @@
 "use client"
 
-import { useState, useCallback } from "react"
-import { useNavigate } from "react-router-dom"
+import { useState, useCallback, useEffect } from "react"
+import { useNavigate, useLocation } from "react-router-dom"
+import BrowseHobbyists from "./browse-hobbyists"
 import {
   Wrench,
   Recycle,
@@ -34,13 +35,30 @@ import {
 
 export default function Dashboard({ user, onSignOut }) {
   const navigate = useNavigate()
+  const location = useLocation()
   const [activeTab, setActiveTab] = useState("welcome")
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search)
+    const tabParam = params.get('tab')
+    if (tabParam) {
+      setActiveTab(tabParam)
+    }
+  }, [location])
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
   const handleTabChange = useCallback((tab) => {
     setActiveTab(tab)
     setIsMobileMenuOpen(false)
-  }, [])
+    // Update URL without full page reload
+    const params = new URLSearchParams(location.search)
+    if (tab === "welcome") {
+      params.delete('tab')
+    } else {
+      params.set('tab', tab)
+    }
+    navigate(`?${params.toString()}`, { replace: true })
+  }, [navigate, location.search])
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-slate-50 to-green-50">
@@ -89,9 +107,9 @@ export default function Dashboard({ user, onSignOut }) {
                 My Requests
               </button>
               <button
-                onClick={() => setActiveTab("find")}
+                onClick={() => handleTabChange("browse")}
                 className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                  activeTab === "find" ? "bg-emerald-100 text-emerald-700" : "text-slate-600 hover:text-emerald-600"
+                  activeTab === "browse" ? "bg-emerald-100 text-emerald-700" : "text-slate-600 hover:text-emerald-600"
                 }`}
               >
                 Find a Hobbyist
@@ -105,7 +123,7 @@ export default function Dashboard({ user, onSignOut }) {
                 <span className="absolute -top-1 -right-1 h-3 w-3 bg-emerald-500 rounded-full"></span>
               </Button>
 
-              <DropdownMenu>
+              <DropdownMenu >
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" className="relative h-8 w-8 rounded-full">
                     <Avatar className="h-8 w-8">
@@ -164,9 +182,9 @@ export default function Dashboard({ user, onSignOut }) {
                 My Requests
               </button>
               <button
-                onClick={() => handleTabChange("find")}
+                onClick={() => handleTabChange("browse")}
                 className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                  activeTab === "find" ? "bg-emerald-100 text-emerald-700" : "text-slate-600 hover:text-emerald-600"
+                  activeTab === "browse" ? "bg-emerald-100 text-emerald-700" : "text-slate-600 hover:text-emerald-600"
                 }`}
               >
                 Find a Hobbyist
@@ -227,7 +245,7 @@ export default function Dashboard({ user, onSignOut }) {
                 </CardHeader>
                 <CardContent>
                   <Button
-                    onClick={() => setActiveTab("find")}
+                    onClick={() => handleTabChange("browse")}
                     variant="outline"
                     className="w-full border-2 border-blue-200 text-blue-700 hover:bg-blue-50 rounded-xl"
                   >
@@ -356,15 +374,7 @@ export default function Dashboard({ user, onSignOut }) {
           </div>
         )}
 
-        {activeTab === "find" && (
-          <div className="text-center py-16">
-            <h2 className="text-2xl font-bold text-slate-800 mb-4">Find a Hobbyist</h2>
-            <p className="text-slate-600 mb-8">Connect with skilled repair professionals</p>
-            <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 max-w-md mx-auto">
-              <p className="text-slate-500">This section will show available hobbyists...</p>
-            </div>
-          </div>
-        )}
+        {activeTab === "browse" && <BrowseHobbyists user={user} />}
       </main>
     </div>
   )

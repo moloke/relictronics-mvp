@@ -138,13 +138,13 @@ export default function HobbyistProfileForm({ user, onSignOut }) {
                 Dashboard
               </button>
               <button
-                onClick={() => navigate('/requests')}
+                onClick={() => navigate('/dashboard?tab=requests')}
                 className="px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-emerald-600"
               >
                 My Requests
               </button>
               <button
-                onClick={() => navigate('/find')}
+                onClick={() => navigate('/dashboard?tab=browse')}
                 className="px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-emerald-600"
               >
                 Find a Hobbyist
@@ -207,13 +207,13 @@ export default function HobbyistProfileForm({ user, onSignOut }) {
                 Dashboard
               </button>
               <button
-                onClick={() => navigate('/requests')}
+                onClick={() => navigate('/dashboard?tab=requests')}
                 className="px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-emerald-600"
               >
                 My Requests
               </button>
               <button
-                onClick={() => navigate('/find')}
+                onClick={() => navigate('/dashboard?tab=browse')}
                 className="px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-emerald-600"
               >
                 Find a Hobbyist
