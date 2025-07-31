@@ -73,7 +73,7 @@ export default function RepairRequestForm({ user }) {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-slate-50 to-green-50">
+    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-slate-50 to-green-50 text-left">
       {/* Header */}
       <div className="bg-white/80 backdrop-blur-sm border-b border-emerald-100">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">

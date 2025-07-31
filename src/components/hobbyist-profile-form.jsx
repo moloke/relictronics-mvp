@@ -102,7 +102,7 @@ export default function HobbyistProfileForm({ user, onSignOut }) {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-slate-50 to-green-50">
+    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-slate-50 to-green-50 text-left">
       {/* Navigation Bar */}
       <nav className="bg-white/80 backdrop-blur-sm border-b border-emerald-100 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -226,8 +226,8 @@ export default function HobbyistProfileForm({ user, onSignOut }) {
       {/* Page Title */}
       <div>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <h1 className="text-2xl font-bold text-slate-800">Create Your Professional Profile</h1>
-          <p className="text-slate-600">Showcase your skills and attract customers on Relictronics</p>
+          <h1 className="text-2xl font-bold text-slate-800 text-center">Create Your Professional Profile</h1>
+          <p className="text-slate-600 text-center">Showcase your skills and attract customers on Relictronics</p>
         </div>
       </div>
 

@@ -160,14 +160,14 @@ export default function BrowseHobbyists({ user }) {
   })
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-slate-50 to-green-50">
+    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-slate-50 to-green-50 text-left">
       {/* Header */}
       <div className="bg-white/80 backdrop-blur-sm border-b border-emerald-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="mb-6">
             <div>
-              <h1 className="text-2xl font-bold text-slate-800 text-left">Find a Repair Professional</h1>
-              <p className="text-slate-600 text-left">Browse skilled hobbyists and technicians in your area</p>
+              <h1 className="text-2xl font-bold text-slate-800">Find a Repair Professional</h1>
+              <p className="text-slate-600">Browse skilled hobbyists and technicians in your area</p>
             </div>
           </div>
 
@@ -251,7 +251,7 @@ export default function BrowseHobbyists({ user }) {
                       <CardTitle className="text-lg truncate">{hobbyist.name}</CardTitle>
                       {hobbyist.isVerified && <CheckCircle className="h-5 w-5 text-emerald-500 flex-shrink-0" />}
                     </div>
-                    <p className="text-sm text-slate-600 mb-2 text-left">{hobbyist.handle}</p>
+                    <p className="text-sm text-slate-600 mb-2 ">{hobbyist.handle}</p>
                     <div className="flex items-center gap-1 mb-2">
                       {renderStars(hobbyist.rating)}
                       <span className="text-sm font-medium text-slate-700">{hobbyist.rating}</span>
@@ -305,7 +305,10 @@ export default function BrowseHobbyists({ user }) {
                 <div className="flex-grow" />
 
                 {/* Call to Action */}
-                <Button className="w-full bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white font-medium rounded-xl transition-all duration-200 group-hover:shadow-lg mt-auto">
+                <Button
+                  onClick={() => navigate(`/hobbyist/${hobbyist.id}`)}
+                  className="w-full bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white font-medium rounded-xl transition-all duration-200 group-hover:shadow-lg mt-auto"
+                >
                   View Profile
                 </Button>
               </CardContent>
