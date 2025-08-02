@@ -144,6 +144,10 @@ export default function Dashboard({ user, onSignOut }) {
                     <User className="mr-2 h-4 w-4" />
                     <span>Profile</span>
                   </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => navigate('/mvp')} className="cursor-pointer">
+                    <Wrench className="mr-2 h-4 w-4" />
+                    <span>MVP Presentation</span>
+                  </DropdownMenuItem>
                   <DropdownMenuItem className="cursor-pointer">
                     <Settings className="mr-2 h-4 w-4" />
                     <span>Settings</span>
