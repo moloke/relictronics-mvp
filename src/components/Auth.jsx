@@ -1,23 +1,25 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
     sendSignInLinkToEmail,
     isSignInWithEmailLink,
     signInWithEmailLink,
-    sendPasswordResetEmail // New import for password reset
+    sendPasswordResetEmail
 } from 'firebase/auth';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { auth, db } from '../firebase';
 
-// Helper for action code settings
 const actionCodeSettings = {
-    url: window.location.href,
+    url: window.location.origin + '/auth', 
     handleCodeInApp: true
 };
 
-const Auth = ({ setUser }) => {
-    // State management
+const Auth = () => {
+    // Hooks
+    const navigate = useNavigate();
+
     const [isLogin, setIsLogin] = useState(true);
     const [isPasswordless, setIsPasswordless] = useState(false);
     const [email, setEmail] = useState('');
@@ -26,7 +28,6 @@ const Auth = ({ setUser }) => {
     const [error, setError] = useState('');
     const [message, setMessage] = useState('');
 
-    // Effect for handling email link sign-in
     useEffect(() => {
         if (isSignInWithEmailLink(auth, window.location.href)) {
             let emailForSignIn = window.localStorage.getItem('emailForSignIn');
@@ -34,41 +35,41 @@ const Auth = ({ setUser }) => {
                 emailForSignIn = window.prompt('Please provide your email for confirmation');
             }
 
-            signInWithEmailLink(auth, emailForSignIn, window.location.href)
-                .then(async (result) => {
-                    window.localStorage.removeItem('emailForSignIn');
-                    const user = result.user;
-                    const userRef = doc(db, 'users', user.uid);
-                    const docSnap = await getDoc(userRef);
+            if(emailForSignIn) {
+                signInWithEmailLink(auth, emailForSignIn, window.location.href)
+                    .then(async (result) => {
+                        window.localStorage.removeItem('emailForSignIn');
+                        const user = result.user;
+                        const userRef = doc(db, 'users', user.uid);
+                        const docSnap = await getDoc(userRef);
 
-                    if (!docSnap.exists()) {
-                        const userData = {
-                            email: user.email,
-                            userType: 'customer',
-                            createdAt: new Date().toISOString(),
-                            lastLogin: new Date().toISOString()
-                        };
-                        await setDoc(userRef, userData);
-                    } else {
-                        await setDoc(userRef, { lastLogin: new Date().toISOString() }, { merge: true });
-                    }
-                    setUser(user);
-                })
-                .catch((err) => {
-                    console.error('Error signing in with email link:', err);
-                    setError('Failed to sign in with magic link. The link may have expired.');
-                });
+                        if (!docSnap.exists()) {
+                            const userData = {
+                                email: user.email,
+                                userType: 'customer',
+                                createdAt: new Date().toISOString(),
+                                lastLogin: new Date().toISOString()
+                            };
+                            await setDoc(userRef, userData);
+                        } else {
+                            await setDoc(userRef, { lastLogin: new Date().toISOString() }, { merge: true });
+                        }
+                        navigate('/dashboard');
+                    })
+                    .catch((err) => {
+                        console.error('Error signing in with email link:', err);
+                        setError('Failed to sign in with magic link. The link may have expired or is invalid.');
+                    });
+            }
         }
-    }, [setUser]);
+    }, [navigate]);
 
-    // Clear messages when switching forms
     useEffect(() => {
         setError('');
         setMessage('');
     }, [isLogin, isPasswordless]);
 
 
-    // Handler for email/password submission
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
@@ -83,14 +84,13 @@ const Auth = ({ setUser }) => {
         }
 
         try {
-            let userCredential;
             if (isLogin) {
-                userCredential = await signInWithEmailAndPassword(auth, email, password);
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
                 const userRef = doc(db, 'users', userCredential.user.uid);
                 await setDoc(userRef, { lastLogin: new Date().toISOString() }, { merge: true });
 
             } else {
-                userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
                 const userData = {
                     email: userCredential.user.email,
                     userType: 'customer',
@@ -99,10 +99,10 @@ const Auth = ({ setUser }) => {
                 };
                 await setDoc(doc(db, 'users', userCredential.user.uid), userData);
             }
-            setUser(userCredential.user);
+            navigate('/dashboard'); // Navigate to dashboard on success
         } catch (err) {
             let friendlyMessage = 'An authentication error occurred. Please try again.';
-            if (err.code === 'auth/user-not-found' || err.code === 'auth/wrong-password') {
+            if (err.code === 'auth/user-not-found' || err.code === 'auth/wrong-password' || err.code === 'auth/invalid-credential') {
                 friendlyMessage = 'Invalid credentials. Please check your email and password.';
             } else if (err.code === 'auth/email-already-in-use') {
                 friendlyMessage = 'This email is already in use. Please sign in instead.';
@@ -125,8 +125,10 @@ const Auth = ({ setUser }) => {
             await sendSignInLinkToEmail(auth, email, actionCodeSettings);
             window.localStorage.setItem('emailForSignIn', email);
             setMessage('Magic link sent! Check your email to sign in.');
+            setError('');
         } catch (err) {
             setError('Failed to send magic link. Please try again.');
+            setMessage('');
         }
     };
 
@@ -134,13 +136,16 @@ const Auth = ({ setUser }) => {
     const handleForgotPassword = async () => {
         if (!email) {
             setError('Please enter your email address to reset your password.');
+            setMessage('');
             return;
         }
         try {
             await sendPasswordResetEmail(auth, email);
             setMessage('Password reset email sent! Please check your inbox.');
+            setError('');
         } catch (err) {
             setError('Failed to send password reset email. Please ensure the email is correct.');
+            setMessage('');
         }
     };
 

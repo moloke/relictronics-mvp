@@ -6,6 +6,7 @@ import Dashboard from './components/dashboard'
 import HobbyistProfileForm from './components/hobbyist-profile-form'
 import RepairRequestForm from './components/repair-request-form'
 import HobbyistProfileView from './components/hobbyist-profile-view'
+import MvpLanding from './components/mvp-landing'
 import { auth } from './firebase'
 import { onAuthStateChanged, signOut } from 'firebase/auth'
 
@@ -47,6 +48,7 @@ function App() {
             <Route path="/profile" element={<HobbyistProfileForm user={user} />} />
             <Route path="/repair-request" element={<RepairRequestForm user={user} />} />
             <Route path="/hobbyist/:id" element={<HobbyistProfileView user={user} />} />
+            <Route path="/mvp" element={<MvpLanding user={user} />} />
             <Route path="/" element={<Navigate to="/dashboard" replace />} />
           </>
         ) : (
